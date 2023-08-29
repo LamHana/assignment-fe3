@@ -104,7 +104,7 @@
 .r-btn {
     border: solid 3px #caffbf;
     background-color: #fff;
-    color: #000;
+    color: #000 !important;
 }
 
 .r-btn:hover {
@@ -117,7 +117,7 @@
 }
 
 .count-down-container {
-    background-color: #fec3df;
+    background-color: #aad9cd;
 }
 
 .count-down {
