@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Yesteryear&display=swap');
+
+.expired-notice {
+    text-align: center;
+    padding: 2rem;
+    border: 1px solid #ebebeb;
+    border-radius: 0.25rem;
+    margin: 0.5rem;
+}
+
+.expired-notice>span {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: red;
+}
+
+.expired-notice>p {
+    font-size: 1.5rem;
+}
+
+.show-counter {
+    padding: 0.5rem;
+}
+
+.show-counter {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    padding: 0.5rem;
+    border: 1px solid #ebebeb;
+    border-radius: 0.25rem;
+    text-decoration: none;
+}
+
+.show-counter .countdown {
+    line-height: 1.25rem;
+    padding: 0 0.75rem 0 0.75rem;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    color: #000;
+}
+
+.show-counter .countdown.danger {
+    color: #ff0000;
+}
+
+.show-counter .countdown>p {
+    margin: 0;
+}
+
+.show-counter .countdown>span {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    line-height: 1rem;
+}
+
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    padding: 5px 5px;
+    margin-bottom: 15px;
+}
+
+.stop-btn {
+    border: solid 3px #ffadad;
+    background-color: #fff;
+    color: #000;
+
+}
+
+.s-btn {
+    color: #000;
+    border: solid 3px #a0c4ff;
+    background-color: #fff;
+}
+
+.s-btn:hover {
+    background-color: #a0c4ff !important;
+}
+
+.stop-btn:hover {
+    background-color: #ffadad !important;
+    border: solid 3px #ffadad;
+}
+
+.c-btn {
+    border: solid 3px #fdffb6;
+    background-color: #fff;
+    color: #000 !important;
+}
+
+.c-btn:hover {
+    background-color: #fdffb6 !important;
+    border: solid 3px #fdffb6;
+}
+
+.r-btn {
+    border: solid 3px #caffbf;
+    background-color: #fff;
+    color: #000;
+}
+
+.r-btn:hover {
+    background-color: #caffbf !important;
+    border: solid 3px #caffbf !important;
+}
+
+.form-count-down {
+    row-gap: 15px;
+}
+
+.count-down-container {
+    background-color: #fec3df;
+}
+
+.count-down {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 80px;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Yesteryear', cursive;
+    padding-top: 80px;
+    margin-top: 0;
+}
