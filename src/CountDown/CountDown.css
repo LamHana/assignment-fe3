@@ -120,7 +120,8 @@
     background-color: #aad9cd;
 }
 
-.count-down {
+.count-down,
+.form {
     display: flex;
     justify-content: center;
     align-items: center;
