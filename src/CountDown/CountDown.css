@@ -136,3 +136,14 @@
     padding-top: 80px;
     margin-top: 0;
 }
+
+.api-container {
+    background-color: #d2dae9;
+    padding-bottom: 30px;
+}
+
+.call-api {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
