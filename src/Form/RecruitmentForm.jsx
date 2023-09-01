@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Form, FormList } from "./Recruitment.styled";
 
@@ -52,6 +52,12 @@ const RecruitmentForm = () => {
       case "code":
         if (!value) {
           newErrors.code = "Student ID is required";
+        } else if (
+          !/^(SE)(\d){6}$/.test(form.code.toUpperCase()) &&
+          !/^(SS)(\d){6}$/.test(form.code.toUpperCase()) &&
+          !/^(SA)(\d){6}$/.test(form.code.toUpperCase())
+        ) {
+          newErrors.code = "code is invalid";
         } else {
           newErrors[fieldName] = "";
         }
@@ -60,16 +66,14 @@ const RecruitmentForm = () => {
       case "phone":
         if (!value) {
           newErrors.phone = "Phone is required";
+        } else if (!/(84|0[3|5|7|8|9])+([0-9]{8})\b/.test(form.phone)) {
+          newErrors.phone = "Phone is invalid";
         } else {
           newErrors[fieldName] = "";
         }
     }
     return newErrors;
   };
-
-  useEffect(() => {
-    console.log("after set error:" + JSON.stringify(errors));
-  }, [errors]);
 
   const onSubmit = (e) => {
     e.preventDefault();
