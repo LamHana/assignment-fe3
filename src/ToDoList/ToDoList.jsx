@@ -97,13 +97,14 @@ function ToDoList() {
     console.log();
     // drop to another column
     if (result.destination.droppableId != "to-do") {
+      // from to-do -> done :
       const items = Array.from(updateTask);
       const [reorderedItem] = items.splice(result.source.index, 1);
       if (result.source.droppableId == "done") {
+        // from done -> done
         const doneItems = Array.from(done);
         const [reorderedDoneItem] = doneItems.splice(result.source.index, 1);
         doneItems.splice(result.destination.index, 0, reorderedDoneItem);
-        console.log(doneItems);
         setUpdateDone(doneItems);
       } else {
         const newDone = done;
@@ -113,10 +114,21 @@ function ToDoList() {
         setUpdateTask(items);
       }
     } else {
-      const items = Array.from(updateTask);
-      const [reorderedItem] = items.splice(result.source.index, 1);
-      items.splice(result.destination.index, 0, reorderedItem);
-      setUpdateTask(items);
+      if (result.source.droppableId == "done") {
+        // form done -> to-do
+        const doneItems = Array.from(done);
+        const [reorderedDoneItem] = doneItems.splice(result.source.index, 1);
+        const newTask = tasks;
+        tasks.splice(result.destination.index, 0, reorderedDoneItem);
+        setTasks(newTask);
+        localStorage.setItem("tasks", JSON.stringify(newTask));
+        setUpdateDone(doneItems);
+      } else {
+        const items = Array.from(updateTask); //from to-do -> to-do
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+        setUpdateTask(items);
+      }
     }
   };
 
