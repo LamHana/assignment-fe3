@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useCountdown } from "../../hook/useCountDown";
+import { useCountdown } from "../hook/useCountDown";
 import DateTimeDisplay from "./DateTimeDisplay";
 import "./CountDown.css";
 const CountdownTimer = ({ targetDate, isStop, setTimeLeft }) => {

@@ -29,10 +29,10 @@ export const DoneCol = styled.div`
 
 export const Column = styled.div`
   max-width: 350px;
+  min-height: 280px;
   display: flex;
   padding: 24px;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-start;
   gap: 24px;
   flex: 1 1;

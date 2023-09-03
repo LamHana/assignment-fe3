@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Column,
@@ -13,15 +13,24 @@ import {
 } from "./ToDoList.styled";
 import CreateModal from "./Modal";
 import EditModal from "./EditModal";
-// import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 function ToDoList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [index, setIndex] = useState();
   const [tasks, setTasks] = useState(
-    localStorage.getItem("tasks")?.split(",") || []
+    JSON.parse(localStorage.getItem("tasks")) || []
+  );
+  const [done, setDone] = useState(
+    JSON.parse(localStorage.getItem("done")) || []
   );
   const [isLoanding, setIsLoading] = useState(true);
+  const [updateTask, setUpdateTask] = useState(
+    JSON.parse(localStorage.getItem("tasks")) || tasks
+  );
+  const [updateDone, setUpdateDone] = useState(
+    JSON.parse(localStorage.getItem("done")) || done
+  );
   // Create modal
   const showModal = () => {
     setIsModalOpen(true);
@@ -30,10 +39,13 @@ function ToDoList() {
   const handleOk = (e) => {
     const newTask = tasks;
     if (e != undefined) {
-      newTask.push(e);
+      newTask.push({
+        id: `${Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000}`,
+        task: e,
+      });
     }
     setTasks(newTask);
-    localStorage.setItem("tasks", tasks);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
     setIsModalOpen(false);
   };
 
@@ -49,10 +61,10 @@ function ToDoList() {
   const handleEditOk = (e) => {
     const newTask = tasks;
     if (e != "") {
-      newTask[index] = e;
+      newTask[index].task = e;
     }
     setTasks(newTask);
-    localStorage.setItem("tasks", tasks);
+    localStorage.setItem("tasks", JSON.stringify(newTask));
     setIsEditModalOpen(false);
   };
   const handleEditCancel = () => {
@@ -66,68 +78,154 @@ function ToDoList() {
     setIsLoading(true);
     newTask.length == 0
       ? localStorage.clear()
-      : localStorage.setItem("tasks", newTask);
+      : localStorage.setItem("tasks", JSON.stringify(newTask));
   };
+
   const onDelete = async (e, index) => {
     setIsLoading(false);
     const newTask = tasks;
     if (e && e.stopPropagation) e.stopPropagation();
-    return newTask.filter((item) => item != newTask[index]);
+    return newTask.filter((item) => item.task != newTask[index].task);
   };
+
+  // Drag and Drop function
+
+  const handleOnDragEnd = (result) => {
+    console.log(result);
+    if (!result.destination) return;
+
+    console.log();
+    // drop to another column
+    if (result.destination.droppableId != "to-do") {
+      const items = Array.from(updateTask);
+      const [reorderedItem] = items.splice(result.source.index, 1);
+      if (result.source.droppableId == "done") {
+        const doneItems = Array.from(done);
+        const [reorderedDoneItem] = doneItems.splice(result.source.index, 1);
+        doneItems.splice(result.destination.index, 0, reorderedDoneItem);
+        console.log(doneItems);
+        setUpdateDone(doneItems);
+      } else {
+        const newDone = done;
+        newDone.splice(result.destination.index, 0, reorderedItem);
+        setDone(newDone);
+        localStorage.setItem("done", JSON.stringify(newDone));
+        setUpdateTask(items);
+      }
+    } else {
+      const items = Array.from(updateTask);
+      const [reorderedItem] = items.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reorderedItem);
+      setUpdateTask(items);
+    }
+  };
+
+  useEffect(() => {
+    setTasks(updateTask);
+    localStorage.setItem("tasks", JSON.stringify(updateTask));
+  }, [updateTask]);
+
+  useEffect(() => {
+    setDone(updateDone);
+    localStorage.setItem("done", JSON.stringify(updateDone));
+  }, [updateDone]);
   return (
-    // <DragDropContext droppableId="characters">
-    <Container>
-      <ToDoCol>
-        <Column>
-          <Title>To-do</Title>
-          {isLoanding &&
-            tasks?.map((task, index) => {
-              return (
-                <Task key={index} onClick={(e) => showEditModal(e, index)}>
-                  <Text>{task}</Text>
-                  <DeleteIcon onClick={(e) => handleDelete(e, index)} />
-                </Task>
-              );
-            })}
-        </Column>
-        <Button onClick={showModal}>
-          <PlusIcon />
-          <Text>New task</Text>
-        </Button>
-      </ToDoCol>
-      <DoneCol>
-        <Column>
-          <Title>Done</Title>
-          <Task>
-            <Text> Hello</Text>
-          </Task>
-          <Task>
-            <Text> Hello</Text>
-          </Task>
-          <Task>
-            <Text> Hello</Text>
-          </Task>
-        </Column>
-      </DoneCol>
-      {isModalOpen && (
-        <CreateModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          handleOk={handleOk}
-          handleCancel={handleCancel}
-        />
-      )}
-      {isEditModalOpen && (
-        <EditModal
-          isEditModalOpen={isEditModalOpen}
-          tasks={tasks}
-          handleEditOk={handleEditOk}
-          handleEditCancel={handleEditCancel}
-          index={index}
-        />
-      )}
-    </Container>
-    // </DragDropContext>
+    <DragDropContext droppableId="to-do" onDragEnd={handleOnDragEnd}>
+      <Container>
+        <ToDoCol>
+          <Droppable droppableId="to-do">
+            {(provided) => (
+              <Column
+                className="to-do"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                <Title>To-do</Title>
+                {isLoanding &&
+                  tasks?.map((task, index) => {
+                    return (
+                      <Draggable
+                        key={task.id}
+                        draggableId={task.id}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <Task
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            onClick={(e) => showEditModal(e, index)}
+                          >
+                            <Text>{task.task}</Text>
+                            <DeleteIcon
+                              onClick={(e) => handleDelete(e, index)}
+                            />
+                          </Task>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                {provided.placeholder}
+              </Column>
+            )}
+          </Droppable>
+          <Button onClick={showModal}>
+            <PlusIcon />
+            <Text>New task</Text>
+          </Button>
+        </ToDoCol>
+        <DoneCol>
+          <Droppable droppableId="done">
+            {(provided) => (
+              <Column
+                className="done"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                <Title>Done</Title>
+                {done?.map((item, index) => {
+                  return (
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <Task
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <Text>{item.task}</Text>
+                        </Task>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+              </Column>
+            )}
+          </Droppable>
+        </DoneCol>
+        {isModalOpen && (
+          <CreateModal
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            handleOk={handleOk}
+            handleCancel={handleCancel}
+          />
+        )}
+        {isEditModalOpen && (
+          <EditModal
+            isEditModalOpen={isEditModalOpen}
+            tasks={tasks}
+            handleEditOk={handleEditOk}
+            handleEditCancel={handleEditCancel}
+            index={index}
+          />
+        )}
+      </Container>
+    </DragDropContext>
   );
 }
 

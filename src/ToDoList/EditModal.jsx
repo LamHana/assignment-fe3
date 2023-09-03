@@ -9,7 +9,7 @@ const EditModal = ({
   handleEditCancel,
   index,
 }) => {
-  const [task, setTask] = useState(tasks[index]);
+  const [task, setTask] = useState(tasks[index].task);
   const handleChange = (e) => {
     setTask(e.target.value);
   };
