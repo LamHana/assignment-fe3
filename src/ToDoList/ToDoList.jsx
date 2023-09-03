@@ -13,7 +13,7 @@ import {
 } from "./ToDoList.styled";
 import CreateModal from "./Modal";
 import EditModal from "./EditModal";
-
+// import { DragDropContext, Droppable } from "react-beautiful-dnd";
 function ToDoList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -75,6 +75,7 @@ function ToDoList() {
     return newTask.filter((item) => item != newTask[index]);
   };
   return (
+    // <DragDropContext droppableId="characters">
     <Container>
       <ToDoCol>
         <Column>
@@ -94,7 +95,7 @@ function ToDoList() {
           <Text>New task</Text>
         </Button>
       </ToDoCol>
-      {/* <DoneCol>
+      <DoneCol>
         <Column>
           <Title>Done</Title>
           <Task>
@@ -107,7 +108,7 @@ function ToDoList() {
             <Text> Hello</Text>
           </Task>
         </Column>
-      </DoneCol> */}
+      </DoneCol>
       {isModalOpen && (
         <CreateModal
           isModalOpen={isModalOpen}
@@ -126,6 +127,7 @@ function ToDoList() {
         />
       )}
     </Container>
+    // </DragDropContext>
   );
 }
 
